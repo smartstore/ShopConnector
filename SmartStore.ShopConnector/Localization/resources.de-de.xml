@@ -1,6 +1,6 @@
 ﻿<Language Name="Deutsch" IsDefault="true" IsRightToLeft="false">
     <LocaleResource Name="Plugins.FriendlyName.SmartStore.ShopConnector" AppendRootKey="false">
-        <Value>.NET zu .NET Shop-Konnektor</Value>
+        <Value>Shop-Konnektor</Value>
     </LocaleResource>
     <LocaleResource Name="Plugins.Description.SmartStore.ShopConnector" AppendRootKey="false">
         <Value>Ermöglicht den direkten Datenaustausch zwischen Smartstore Shops.</Value>
