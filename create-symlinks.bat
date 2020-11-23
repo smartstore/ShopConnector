@@ -3,6 +3,6 @@
 
 @echo off
 
-mklink "%CD%\..\SmartStoreNET\src\Plugins\SmartStore.ShopConnector-sym" "%CD%\SmartStore.ShopConnector"
+mklink /j "%CD%\..\SmartStoreNET\src\Plugins\SmartStore.ShopConnector-sym" "%CD%\SmartStore.ShopConnector"
 
 pause
