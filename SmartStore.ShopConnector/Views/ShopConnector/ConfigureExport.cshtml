@@ -1,0 +1,59 @@
+﻿@using SmartStore.ShopConnector.Models;
+@using SmartStore.ShopConnector;
+@using SmartStore.ShopConnector.Extensions;
+@using SmartStore.Web.Framework;
+@using SmartStore.Web.Framework.UI;
+@using Telerik.Web.Mvc.UI;
+@model ConfigurationModel
+
+<div class="alert alert-info">
+	@Html.Raw(@T("Plugins.SmartStore.ShopConnector.AdminInstructionExport"))
+</div>
+
+<script>
+	function onRowDataBound_ExportConnection(e) {
+		if (!e.dataItem.IsActive) {
+			$(e.row).find('td').wrapInner('<span class="muted" />');
+		}
+	}
+</script>
+
+<div>
+	@(Html.Telerik().Grid<ConnectionModel>()
+		.Name("export-connection-grid")
+		.DataKeys(keys => keys.Add(x => x.Id)
+		.RouteKey("Id"))
+		.Columns(c =>
+		{
+			c.Bound(x => x.Url)
+				.ClientTemplate(@Html.NoteAndUrlLabel());
+			c.Bound(x => x.IsActive)
+				.Centered()
+				.ClientTemplate(@Html.SymbolForBool("IsActive"));
+			c.Bound(x => x.RequestCount)
+				.Centered()
+				.ReadOnly();
+			c.Bound(x => x.LastRequest)
+				.ReadOnly();
+			c.Bound(x => x.LastProductCall)
+				.ReadOnly();
+			c.Template(x => @Html.GridButtons(true))
+				.ClientTemplate(@Html.GridButtons(true))
+				.Width(200)
+				.HtmlAttributes(new { align = "right" });
+		})
+		.DataBinding(dataBinding =>
+		{
+			dataBinding.Ajax()
+				.Select("ConnectionSelect", "ShopConnector", new { area = ShopConnectorPlugin.SystemName, isForExport = true });
+		})
+		.ToolBar(commands => commands
+			.Custom()
+			.Name("connection-export-insert-button")
+			.HtmlAttributes(new { @class = "t-button connection-action action-export action-insert", data_url = Url.Action("ConnectionUpsert", "ShopConnector", new { area = ShopConnectorPlugin.SystemName }) })
+			.Text("<i class='fa fa-plus'></i><span>" + @T("Plugins.SmartStore.ShopConnector.AddNewExportConnection") + "</span>"))
+		.Pageable(settings => settings.PageSize(Model.GridPageSize).Position(GridPagerPosition.Both))
+		.ClientEvents(events => events.OnRowDataBound("onRowDataBound_ExportConnection"))
+		.EnableCustomBinding(true)
+	)
+</div>

@@ -1,0 +1,56 @@
+﻿@using SmartStore.ShopConnector;
+@using SmartStore.ShopConnector.Models;
+@using SmartStore.Web.Framework;
+@using SmartStore.Web.Framework.UI;
+@using Telerik.Web.Mvc.UI;
+@model ShopConnectorProductModel
+@{
+	Layout = "";
+}
+
+@if (Model.ProductId == 0)
+{
+    <div class="alert alert-warning">
+        @T("Admin.SaveBeforeEdit")
+    </div>
+    return;
+}
+
+<div class="admin-config-group">
+    <div class="head">
+        @T("Plugins.SmartStore.ShopConnector.EnableSkuMapping")
+    </div>
+    <p class="text-muted">
+        @Html.Raw(T("Plugins.SmartStore.ShopConnector.EnableSkuMapping.ProductInfo"))
+    </p>
+</div>
+
+<div>
+	@(Html.Telerik().Grid<SkuMappingModel>()
+        .Name("sc-sku-mapping-grid")
+        .DataKeys(keys =>
+        {
+            keys.Add(x => x.Id);
+        })
+        .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("SkuMappingList", "ShopConnector", new { area = ShopConnectorPlugin.SystemName, productId = Model.ProductId })
+                .Insert("SkuMappingInsert", "ShopConnector", new { area = ShopConnectorPlugin.SystemName, productId = Model.ProductId })
+                .Update("SkuMappingUpdate", "ShopConnector", new { area = ShopConnectorPlugin.SystemName, productId = Model.ProductId })
+                .Delete("SkuMappingDelete", "ShopConnector", new { area = ShopConnectorPlugin.SystemName, productId = Model.ProductId });
+        })
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.Domain);
+            columns.Bound(x => x.Sku);
+            columns.Command(commands =>
+            {
+                commands.Edit().Localize(T);
+                commands.Delete().Localize(T);
+            })
+            .HtmlAttributes(new { align = "right" });
+        })
+        .ToolBar(commands => commands.Insert())
+        .EnableCustomBinding(true))
+</div>

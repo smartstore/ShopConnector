@@ -1,0 +1,293 @@
+﻿@using SmartStore.ShopConnector;
+@using SmartStore.ShopConnector.Models;
+@using SmartStore.Web.Framework;
+@using SmartStore.Web.Framework.UI;
+@model ConfigurationModel
+@{
+	Layout = "";
+	Html.AddCssFileParts(true, Url.Content("~/Plugins/SmartStore.ShopConnector/Content/smartstore.shopconnector.css"));
+}
+
+<div class="plugin-actions">
+	<button id="SaveConfigButton" type="submit" name="save" class="btn btn-warning" value="save">
+		<i class="fa fa-check"></i>
+		<span>@T("Admin.Common.Save")</span>
+	</button>
+</div>
+
+@Html.ValidationSummary(false)
+
+@(Html.SmartStore().TabStrip().Name("shop-connector-tabs").Style(TabsStyle.Material).Position(TabsPosition.Top).Items(x =>
+{
+	x.Add()
+		.Text(T("Common.General").Text)
+		.Content(TabGeneral())
+		.Selected(string.IsNullOrEmpty(Model.SelectedTab));
+
+	x.Add()
+		.Text(T("Common.Import").Text)
+		.Content(Html.Partial("ConfigureImport", Model).ToHtmlString())
+		.Selected(Model.SelectedTab == "Import");
+
+	x.Add()
+		.Text(T("Common.Export").Text)
+		.Content(Html.Partial("ConfigureExport", Model).ToHtmlString())
+		.Selected(Model.SelectedTab == "Export");
+}))
+
+@helper TabGeneral()
+{
+	<form method="POST" action="@Url.Action("ConfigurePlugin", "Plugin", new { area = "Admin", systemName = ShopConnectorPlugin.SystemName })" novalidate="novalidate">
+		<table class="adminContent">
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.IsImportEnabled)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.IsImportEnabled)
+					@Html.ValidationMessageFor(model => model.IsImportEnabled)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.IsExportEnabled)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.IsExportEnabled)
+					@Html.ValidationMessageFor(model => model.IsExportEnabled)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.LogUnauthorized)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.LogUnauthorized)
+					@Html.ValidationMessageFor(model => model.LogUnauthorized)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.ValidMinutePeriod)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.ValidMinutePeriod, new { postfix = @T("Time.Minutes").Text })
+					@Html.ValidationMessageFor(model => model.ValidMinutePeriod)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.ImageDownloadTimeout)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.ImageDownloadTimeout, new { postfix = @T("Time.Minutes").Text })
+					@Html.ValidationMessageFor(model => model.ImageDownloadTimeout)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.EnableSkuMapping)
+				</td>
+				<td class="adminData">
+					@Html.CheckBoxFor(model => model.EnableSkuMapping, new { data_toggler_for = "#pnlSkuImport" })
+					@Html.ValidationMessageFor(model => model.EnableSkuMapping)
+				</td>
+			</tr>
+			<tr id="pnlSkuImport">
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.EnableSkuImport)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.EnableSkuImport)
+					@Html.ValidationMessageFor(model => model.EnableSkuImport)
+				</td>
+			</tr>
+		</table>
+	</form>
+}
+
+@{Html.SmartStore().Window()
+	.Name("connection-dialog")
+	.Size(WindowSize.Large)
+	.FooterContent(@<text>
+		<button class="btn btn-secondary btn-flat" data-dismiss="modal">
+			<span>@T("Common.Cancel")</span>
+		</button>
+		<button class="btn btn-primary">
+			<span id="ConnectionOk">@T("Common.OK")</span>
+			<span id="ConnectionNext" style="display: none;">@T("Common.Next")</span>
+		</button>
+	</text>)
+	.Render();
+}
+
+<script>
+	// XML file upload.
+	window['onXmlFileUploaded'] = function (file, response) {
+		displayNotification(response.Message, response.MessageType);
+	};
+
+	$(function () {
+		var dialog = $('#connection-dialog');
+		var progressIntervall = null;
+
+		dialog.on('shown.bs.modal', function (e) {
+			applyCommonPlugins(dialog);	
+		})
+
+		// Connection action clicked.
+		$(document).on('click', 'a.connection-action', function (e) {
+			e.preventDefault();
+			var link = $(this),
+				id = link.attr('data-id') || '0',
+				isImport = link.hasClass('action-import'),
+				isExport = link.hasClass('action-export');
+
+			if (link.hasClass('action-delete')) {
+				$({}).doAjax({
+					type: 'POST',
+					url: link.attr('data-url') + '?isForExport=' + isExport.toString() + '&id=' + id,
+					ask: @T("Admin.Common.DeleteConfirmation").JsText,
+					callbackSuccess: function (resp) {
+						refreshGrid(isExport);
+					}
+				});
+				return false;
+			}
+
+			dialog.find('.modal-body').empty();
+			dialog.find('.modal-title').text($.trim($(this).text()));
+            showPrimaryButton(false);
+            $('#connection-dialog').find('.btn-secondary').toggle(true);
+
+			if (link.hasClass('action-update') || link.hasClass('action-insert')) {
+				$({}).doAjax({
+					type: 'GET',
+					url: link.attr('data-url') + '?isForExport=' + isExport.toString() + '&id=' + id,
+					smallIcon: dialog.find('.modal-body'),
+					callbackSuccess: function (resp) {
+						dialog.find('.modal-body').html(resp);
+						dialog.find('#LimitedToStoreIds, #LimitedToManufacturerIds').selectWrapper();
+						safeSetFocus(dialog);
+					},
+					callbackComplete: function () {
+						showPrimaryButton(true);
+					}
+				});
+			}
+			else {
+				link.doAjax({
+					type: 'GET',
+					smallIcon: dialog.find('.modal-body'),
+					callbackSuccess: function (resp) {
+						if (isImport && !resp.length) {
+                            showPrimaryButton(true);
+                            $('#connection-dialog').find('.btn-secondary').toggle(false);
+
+							function getProgress() {
+								$({}).doAjax({
+									type: 'GET',
+									url: link.attr('data-urlprogress'),
+									callbackSuccess: function (progress) {
+										dialog.find('.modal-body').html(progress.Message);
+										if (progress.NoRunningTask) {
+											clearInterval(progressIntervall);
+											progressIntervall = null;
+										}
+									}
+								});
+							}
+
+							getProgress();
+							if (progressIntervall == null) {
+								progressIntervall = setInterval(getProgress, 2000);
+							}
+						}
+						else {
+							dialog.find('.modal-body').html(resp);
+
+							showPrimaryButton(true, isImport && $('#ImportFile').length ? 'ConnectionNext' : null);
+
+							// Update download product data link.
+							$('#ImportFile').change(function () {
+								var link = $('a.product-data-load');
+								link.attr('href', link.attr('data-url') + '&name=' + encodeURIComponent($(this).val()));
+							}).trigger('change');
+
+							dialog.find('#FilterManufacturerIds, #ImportFile, #FilterCategoryId').selectWrapper();
+						}
+					}
+				});
+			}
+
+			dialog.modal('show');
+			
+			return false;
+		});
+
+		// Submit dialog form.
+		dialog.on('click', '.btn-primary', function () {
+			var form = dialog.find('.connection-form'),
+				forExport = ((form.find('input[name=IsForExport]').val() || '').toLowerCase() === 'true');
+
+			if (!form.length) {
+				dialog.modal('hide');
+				return;
+			}
+
+			if (form.attr('method') === 'GET') {
+				form.submit();
+				return;
+			}
+
+			dialog.find('.processing-note').fadeIn();
+			showPrimaryButton(false);
+
+			form.doAjax({
+				type: 'POST',
+				callbackSuccess: function (resp) {
+					if (resp.length)
+						dialog.find('.modal-body').html(resp);
+					else
+						dialog.modal('hide');
+					refreshGrid(forExport);
+				},
+				callbackComplete: function () {
+					showPrimaryButton(true);
+				}
+			});
+		});
+
+		// Delete product data file.
+		dialog.on('click', '.product-data-delete', function () {
+			var name = $('#ImportFile').val();
+
+			$(this).doAjax({
+				type: 'POST',
+				appendToUrl: '&name=' + encodeURIComponent(name),
+				ask: dialog.attr('data-askdelete')
+			});
+		});
+
+
+		function showPrimaryButton(display, textId) {
+			var button = $('#connection-dialog').find('.btn-primary').toggle(display);
+			if (display) {
+				button.find('span').hide();
+				button.find('#' + (textId || 'ConnectionOk')).show();
+			}
+        }
+
+		function refreshGrid(forExport) {
+			setTimeout(function () {
+				$(forExport ? '#export-connection-grid' : '#import-connection-grid').data('tGrid').ajaxRequest();
+			}, 500);
+		}
+
+		function safeSetFocus(dialog) {
+			setTimeout(function () {
+				dialog.find('.modal-body :input:visible:enabled:first').focus();
+			}, 800);
+		}
+	});
+</script>

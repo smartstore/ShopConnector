@@ -1,0 +1,11 @@
+﻿FriendlyName: .NET to .NET Shop-Connector
+SystemName: SmartStore.ShopConnector
+Description: Data exchange between Smartstore shops.
+Group: Data
+Version: 4.1.0
+MinAppVersion: 4.1.0
+Author: SmartStore AG
+DisplayOrder: 1
+FileName: SmartStore.ShopConnector.dll
+ResourceRootKey: Plugins.SmartStore.ShopConnector
+Url: http://community.smartstore.com/marketplace/file/58-shopconnector-for-smartstorenet/

@@ -1,0 +1,96 @@
+﻿@using SmartStore.ShopConnector.Models;
+@using SmartStore.ShopConnector;
+@using SmartStore.ShopConnector.Extensions;
+@using SmartStore.Web.Framework;
+@using SmartStore.Web.Framework.UI;
+@using Telerik.Web.Mvc.UI;
+@model ConfigurationModel
+
+<div class="alert alert-info">
+	@Html.Raw(@T("Plugins.SmartStore.ShopConnector.AdminInstructionImport"))
+</div>
+
+<script>
+	function onRowDataBound_ImportConnection(e) {
+		if (!e.dataItem.IsActive) {
+			$(e.row).find('td').wrapInner('<span class="muted" />');
+		}
+	}
+</script>
+
+<div>
+	@(Html.Telerik().Grid<ConnectionModel>()
+		.Name("import-connection-grid")
+		.DataKeys(keys => keys.Add(x => x.Id)
+		.RouteKey("Id"))
+		.Columns(c =>
+		{
+			c.Bound(x => x.Url)
+				.ClientTemplate(@Html.NoteAndUrlLabel());
+			c.Bound(x => x.IsActive)
+				.Centered()
+				.ClientTemplate(@Html.SymbolForBool("IsActive"));
+			c.Bound(x => x.RequestCount)
+				.Centered()
+				.ReadOnly();
+			c.Bound(x => x.LastRequest)
+				.ReadOnly();
+			c.Bound(x => x.LastProductCall)
+				.ReadOnly();
+			c.Template(x => @Html.GridButtons(false))
+				.ClientTemplate(@Html.GridButtons(false))
+				.Width(200)
+				.HtmlAttributes(new { align = "right" });
+		})
+		.DataBinding(dataBinding =>
+		{
+			dataBinding.Ajax()
+				.Select("ConnectionSelect", "ShopConnector", new { area = ShopConnectorPlugin.SystemName, isForExport = false });
+		})
+		.ToolBar(commands =>
+		{
+			commands.Custom()
+				.Name("connection-import-insert-button")
+				.HtmlAttributes(new { @class = "t-button connection-action action-import action-insert", data_url = Url.Action("ConnectionUpsert", "ShopConnector", new { area = ShopConnectorPlugin.SystemName }) })
+				.Text("<i class='fa fa-plus'></i><span>" + @T("Plugins.SmartStore.ShopConnector.AddNewImportConnection") + "</span>");
+		})
+		.Pageable(settings => settings.PageSize(Model.GridPageSize).Position(GridPagerPosition.Both))
+		.ClientEvents(events => events.OnRowDataBound("onRowDataBound_ImportConnection"))
+		.EnableCustomBinding(true)
+	)
+</div>
+
+<div class="mt-2">
+	<a href="javascript:void(0)" class="btn btn-primary connection-action action-import action-product-import"
+	   data-url="@Url.Action("ProductFileSelect", "ShopConnectorImport", new { id = "0", area = ShopConnectorPlugin.SystemName })"
+	   data-urlprogress="@Url.Action("ProductImportProgress", "ShopConnectorImport", new { area = ShopConnectorPlugin.SystemName })">
+		<i class="fa fa-fw fa-cogs"></i>
+		<span>@T("Plugins.SmartStore.ShopConnector.Action.ProductImport")</span>
+	</a>
+
+	@if (Model.LogFileExists)
+	{
+		<a href="@Url.Action("ImportLog", "ShopConnectorImport", new { area = ShopConnectorPlugin.SystemName })" class="btn btn-secondary" target="LogFile">
+			<i class="far fa-fw fa-file-alt"></i>
+			<span>@T("Plugins.SmartStore.ShopConnector.Action.ImportLogFile")</span>
+		</a>
+	}
+</div>
+
+<div class="adminContent mt-4">
+	<div class="adminRow">
+		<div class="adminTitle">
+	        @(Html.SmartStore().FileUploader()
+		        .Name("XmlFileUploader")
+		        .UploadUrl(Url.Action("XmlFileUpload", "ShopConnector", new { area = ShopConnectorPlugin.SystemName }))
+		        .TypeFilter(".xml")
+		        .ShowBrowseMedia(false)
+		        .ShowRemoveButton(false)
+		        .ShowRemoveButtonAfterUpload(false)
+				.MaxFileSize(0)
+		        .UploadText(T("Plugins.SmartStore.ShopConnector.UploadXmlFile"))
+		        .OnUploadCompletedHandlerName("onXmlFileUploaded")
+	        )
+		</div>
+	</div>
+</div>

@@ -1,0 +1,86 @@
+﻿@using SmartStore.ShopConnector.Models;
+@using SmartStore.Web.Framework;
+@model AboutModel
+@{
+	Layout = "";
+
+	Html.AddCssFileParts(true, Url.Content("~/Plugins/SmartStore.ShopConnector/Content/smartstore.shopconnector.css"));
+}
+
+@if (Model.StoreLogoUrl.HasValue())
+{
+	<div>
+		<img src="@Model.StoreLogoUrl" alt="@Model.StoreName" class="about-store-logo" />
+	</div>
+}
+
+<div>
+	<table class="adminContent">
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.StoreName)
+			</td>
+			<td class="adminData">
+				@Html.TextBoxFor(model => model.StoreName, new { @readonly = "readonly", @class = "form-control-plaintext" })
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.CompanyName)
+			</td>
+			<td class="adminData">
+				@Html.TextBoxFor(model => model.CompanyName, new { @readonly = "readonly", @class = "form-control-plaintext" })
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.StoreUrl)
+			</td>
+			<td class="adminData">
+				@Html.TextBoxFor(model => model.StoreUrl, new { @readonly = "readonly", @class = "form-control-plaintext" })
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.UtcTime)
+			</td>
+			<td class="adminData">
+				<div class="form-control-plaintext">
+					@Model.UtcTime.ToNativeString("F")
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.StoreCount)
+			</td>
+			<td class="adminData">
+				@Html.TextBoxFor(model => model.StoreCount, new { @readonly = "readonly", @class = "form-control-plaintext" })
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.AppVersion)
+			</td>
+			<td class="adminData">
+				@Html.TextBoxFor(model => model.AppVersion, new { @readonly = "readonly", @class = "form-control-plaintext" })
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.ConnectorVersion)
+			</td>
+			<td class="adminData">
+				@Html.TextBoxFor(model => model.ConnectorVersion, new { @readonly = "readonly", @class = "form-control-plaintext" })
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.UpdatedProductsCount)
+			</td>
+			<td class="adminData">
+				@Html.TextBoxFor(model => model.UpdatedProductsCount, new { @readonly = "readonly", @class = "form-control-plaintext" })
+			</td>
+		</tr>
+	</table>
+</div>

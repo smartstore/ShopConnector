@@ -1,0 +1,20 @@
+﻿@using SmartStore.ShopConnector.Models;
+@model ProductImportCompletedModel
+@{
+	Layout = null;
+	Html.AddCssFileParts(true, Url.Content("~/Plugins/SmartStore.ShopConnector/Content/smartstore.shopconnector.css"));
+}
+
+<div>
+	<p>@T("Plugins.SmartStore.ShopConnector.ImportCompleted")</p>
+
+	<div>
+		@if (Model.ImportLogFileUrl.HasValue())
+		{
+			<a href="@Model.ImportLogFileUrl" class="btn btn-secondary" target="LogFile">
+				<i class="far fa-fw fa-file-alt"></i>
+				<span>@T("Plugins.SmartStore.ShopConnector.Action.ImportLogFile")</span>
+			</a>
+		}
+	</div>
+</div>

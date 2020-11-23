@@ -1,0 +1,24 @@
+﻿
+.about-store-logo {
+	max-height: 100px;
+	margin-bottom: 10px;
+}
+
+.t-grid tbody .t-last {
+	overflow: visible !important;
+}
+
+.error-description {
+	font-size: 0.9em;
+}
+.processing-note {
+	display: none;
+}
+
+.progress-stats {
+	font-size: 1.1em;
+}
+
+#AvailableStoresContainer {
+	display: none;
+}

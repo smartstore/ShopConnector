@@ -1,0 +1,252 @@
+﻿@using SmartStore.ShopConnector.Models;
+@using SmartStore.ShopConnector;
+@using SmartStore.Web.Framework;
+@using Telerik.Web.Mvc.UI
+@model ProductImportModel
+@{
+	Layout = "_AdminLayout";
+	ViewBag.Title = T("Plugins.SmartStore.ShopConnector.Action.ProductImport").Text;
+	
+	Html.AddCssFileParts(true, Url.Content("~/Plugins/SmartStore.ShopConnector/Content/smartstore.shopconnector.css"));
+}
+
+<div class="section-header">
+	<div class="title">
+		<i class="far fa-arrow-alt-circle-up"></i>
+		@T("Plugins.SmartStore.ShopConnector.Action.ProductImport") - @Model.ImportFile
+		<a href="@Url.Action("ConfigurePlugin", "Plugin", new { area = "admin", systemName = ShopConnectorPlugin.SystemName })">(@T("Admin.Common.BackToConfiguration"))</a>
+	</div>
+	<div class="options">
+		<a href="@Url.Action("ProductDataDownload", "ShopConnectorImport", new { area = ShopConnectorPlugin.SystemName, id = Model.Id, name = Model.ImportFile })" class="btn btn-secondary" download>
+			<i class="far fa-fw fa-file-alt"></i>
+			<span>@T("Common.Download")</span>
+		</a>
+	</div>
+</div>
+
+@if (Model.FileTooLargeForPreviewWarning.HasValue())
+{
+    <div class="alert alert-warning">
+        @Html.Raw(Model.FileTooLargeForPreviewWarning)
+    </div>
+}
+else
+{
+    <div>
+	    @(Html.Telerik().Grid<ProductImportItemModel>()
+            .Name("ImportProductGrid")
+            .Columns(columns =>
+            {
+                columns.Bound(x => x.Id)
+                    .Filterable(false)
+                    .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups' />")
+                    .Title("<input id='mastercheckbox' type='checkbox' />")
+                    .Width(50)
+                    .HtmlAttributes(new { style = "text-align:center" })
+                    .HeaderHtmlAttributes(new { style = "text-align:center" });
+                columns.Bound(x => x.Name)
+                    .ClientTemplate(@Html.LabeledProductName(null, "Name"));
+                columns.Bound(x => x.Sku);
+                columns.Bound(x => x.FormattedManufacturers)
+                    .ClientTemplate("<#= FormattedManufacturers #>");
+                columns.Bound(x => x.FormattedCategories)
+                    .ClientTemplate("<#= FormattedCategories #>")
+                    .Width(680);
+            })
+            .Pageable(settings => settings.PageSize(Model.GridPageSize).Position(GridPagerPosition.Both))
+            .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductImportList", "ShopConnectorImport", new { importFile = Model.ImportFile }))
+            .ClientEvents(events => events.OnDataBound("importProductGrid_onDataBound"))
+            .EnableCustomBinding(true)
+	    )
+    </div>
+}
+
+<div>
+	<form id="ConnectorImportForm" method="POST" action="@Url.Action("ProductImport", "ShopConnectorImport", new { area = ShopConnectorPlugin.SystemName })">
+		<input type="hidden" id="Id" name="Id" value="@Model.Id" />
+		<input type="hidden" id="ImportFile" name="ImportFile" value="@Model.ImportFile" />
+		<input type="hidden" id="SelectedProductIds" name="SelectedProductIds" value="" />
+		<input type="hidden" id="ImportAll" name="ImportAll" value="false" />
+
+		<table class="adminContent">
+			<tr>
+				<td colspan="2">
+					<div class="admin-config-group">
+						<div class="head">@T("Common.Projection")</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.Publish)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.Publish)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.TaxCategoryId)
+				</td>
+				<td class="adminData">
+					@Html.DropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.DisableBuyButton)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.DisableBuyButton)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.DisableWishlistButton)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.DisableWishlistButton)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.SelectedStoreIds)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.SelectedStoreIds)
+				</td>
+			</tr>
+		</table>
+
+		<table class="adminContent">
+			<tr>
+				<td colspan="2">
+					<div class="admin-config-group">
+						<div class="head">@T("Common.Options")</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.ImportCategories)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.ImportCategories)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.UpdateExistingCategories)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.UpdateExistingCategories)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.UpdateExistingProducts)
+				</td>
+				<td class="adminData">
+					@Html.CheckBoxFor(model => model.UpdateExistingProducts)
+				</td>
+			</tr>
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.DeleteImportFile)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.DeleteImportFile)
+				</td>
+			</tr>
+
+			<tr>
+				<td class="adminTitle">&nbsp;</td>
+				<td class="adminData">
+					<button type="button" id="ImportAll" name="ImportAll" value="ImportAll" class="btn btn-primary connector-import-button">
+						<i class="fa fa-cogs"></i>
+						<span>@T("Admin.Common.ImportAll")</span>
+					</button>
+					<button type="button" id="ImportSelected" name="ImportSelected" value="ImportSelected" class="btn btn-secondary connector-import-button">
+						<i class="fa fa-cogs"></i>
+						<span>@T("Admin.Common.ImportSelected")</span>
+					</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<script>
+	var selectedIds = [];
+
+	jQuery(document).ready(function () {
+
+		// Master checkbox clicked.
+		$('#mastercheckbox').click(function () {
+			$('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+		});
+
+		// Import clicked.
+		$('#ImportAll, #ImportSelected').click(function (e) {
+			e.preventDefault();
+			if (confirm(@T("Admin.Common.AskToProceed").JsText)) {
+				var form = $('#ConnectorImportForm'),
+					importAll = $(this).attr('name') === 'ImportAll';
+				form.find('[name=SelectedProductIds]').val(importAll ? '' : selectedIds.join(','));
+				form.find('[name=ImportAll]').val(importAll.toString());
+				form.submit();
+			}
+			return false;
+		});
+
+		//// Search products.
+		//$('#search-products').click(function () {
+		//	var grid = $('#ImportProductGrid').data('tGrid');
+		//	grid.currentPage = 1;
+		//	grid.ajaxRequest();
+		//	// Clear selected checkboxes.
+		//	$('.checkboxGroups').attr('checked', false).change();
+		//	selectedIds = [];
+		//	return false;
+		//});
+
+		// Wire up checkboxes.
+		$(document).on('change', '#ImportProductGrid input[type=checkbox][id!=mastercheckbox]', function (e) {
+			var $check = $(this);
+			if ($check.is(':checked') == true) {
+				var checked = jQuery.inArray($check.val(), selectedIds);
+				if (checked == -1) {
+					// Add id to selectedIds.
+					selectedIds.push($check.val());
+				}
+			}
+			else {
+				var checked = jQuery.inArray($check.val(), selectedIds);
+				if (checked > -1) {
+					// Remove id from selectedIds.
+					selectedIds = $.grep(selectedIds, function (item, index) {
+						return item != $check.val();
+					});
+				}
+			}
+			importProductGrid_updateMasterCheckbox();
+		});
+	});
+
+
+	function importProductGrid_onDataBound(e) {
+		$('#ImportProductGrid input[type=checkbox][id!=mastercheckbox]').each(function () {
+			var currentId = $(this).val();
+			var checked = jQuery.inArray(currentId, selectedIds);
+			$(this).attr('checked', checked > -1);
+		});
+
+		importProductGrid_updateMasterCheckbox();
+	}
+
+	function importProductGrid_updateMasterCheckbox() {
+		var numChkBoxes = $('#ImportProductGrid input[type=checkbox][id!=mastercheckbox]').length;
+		var numChkBoxesChecked = $('#ImportProductGrid input[type=checkbox][checked][id!=mastercheckbox]').length;
+		$('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+	}
+</script>

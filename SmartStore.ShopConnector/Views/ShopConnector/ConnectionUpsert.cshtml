@@ -1,0 +1,102 @@
+﻿@using SmartStore.ShopConnector.Models;
+@using SmartStore.ShopConnector;
+@model ConnectionModel
+@{
+    Layout = null;
+}
+
+<div class="operation-state"></div>
+
+<div>
+	<form method="POST" class="connection-form" action="@Url.Action("ConnectionUpsert", "ShopConnector", new { area = ShopConnectorPlugin.SystemName })">
+
+		<input type="hidden" id="Id" name="Id" value="@Model.Id" />
+		<input type="hidden" id="IsForExport" name="IsForExport" value="@Model.IsForExport.ToString()" />
+
+		<table class="adminContent">
+			@if (Model.Id != 0)
+			{
+				<tr>
+					<td class="adminTitle">
+						@Html.SmartLabelFor(model => model.IsActive)
+					</td>
+					<td class="adminData">
+						@Html.CheckBoxFor(model => model.IsActive)
+					</td>
+				</tr>
+			}
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.Url)
+				</td>
+				<td class="adminData">
+					@Html.EditorFor(model => model.Url)
+				</td>
+			</tr>
+			@if (Model.KeysRequired)
+			{
+				<tr>
+					<td class="adminTitle">
+						@Html.SmartLabelFor(model => model.PublicKey)
+					</td>
+					<td class="adminData">
+						@Html.EditorFor(model => model.PublicKey)
+					</td>
+				</tr>
+				<tr>
+					<td class="adminTitle">
+						@Html.SmartLabelFor(model => model.SecretKey)
+					</td>
+					<td class="adminData">
+						@Html.EditorFor(model => model.SecretKey)
+					</td>
+				</tr>
+			}									
+			@if (Model.IsForExport)
+			{
+				<tr>
+					<td class="adminTitle">
+						@Html.SmartLabelFor(model => model.LimitedToStoreIds)
+					</td>
+					<td class="adminData">
+						@Html.ListBoxFor(model => model.LimitedToStoreIds, Model.AvailableStores, new { multiple = "multiple", data_tags = "true" })
+					</td>
+				</tr>
+				<tr>
+					<td class="adminTitle">
+						@Html.SmartLabelFor(model => model.LimitedToManufacturerIds)
+					</td>
+					<td class="adminData">
+						@Html.ListBoxFor(model => model.LimitedToManufacturerIds, Model.AvailableManufacturers, new { multiple = "multiple", data_tags = "true" })
+					</td>
+				</tr>
+			}			
+			@if (Model.CreatedOn.HasValue)
+			{
+				<tr>
+					<td class="adminTitle">
+						@Html.SmartLabelFor(model => model.CreatedOn)
+					</td>
+					<td class="adminData">
+						<div class="form-control-plaintext">
+							@Html.DisplayFor(model => model.CreatedOn)
+						</div>
+					</td>
+				</tr>
+			}
+			@if (Model.UpdatedOn.HasValue)
+			{
+				<tr>
+					<td class="adminTitle">
+						@Html.SmartLabelFor(model => model.UpdatedOn)
+					</td>
+					<td class="adminData">
+						<div class="form-control-plaintext">
+							@Html.DisplayFor(model => model.UpdatedOn)
+						</div>
+					</td>
+				</tr>
+			}
+		</table>
+	</form>
+</div>

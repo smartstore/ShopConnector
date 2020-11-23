@@ -1,0 +1,344 @@
+﻿<Language Name="English" IsDefault="false" IsRightToLeft="false">
+    <LocaleResource Name="Plugins.FriendlyName.SmartStore.ShopConnector" AppendRootKey="false">
+        <Value>.NET to .NET Shop-Connector</Value>
+    </LocaleResource>
+    <LocaleResource Name="Plugins.Description.SmartStore.ShopConnector" AppendRootKey="false">
+        <Value>Allows the direct data exchange between Smartstore stores.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Plugins.Permissions.DisplayName.ShopConnector" AppendRootKey="false">
+        <Value>Shop-Connector</Value>
+    </LocaleResource>
+    <LocaleResource Name="Plugins.Permissions.DisplayName.EditSkuMapping" AppendRootKey="false">
+        <Value>Edit differing SKUs</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="ShopConnector">
+        <Value>Shop-Connector</Value>
+    </LocaleResource>
+    <LocaleResource Name="AdminInstructionImport">
+        <Value>
+            <![CDATA[<p>Create connections to Smartstore stores from which you want to import data. Ask the store operator for the required store URL, the public and the secret key.</p>]]>
+        </Value>
+    </LocaleResource>
+    <LocaleResource Name="AdminInstructionExport">
+        <Value>
+            <![CDATA[<p>Create connections to Smartstore stores for which you want to share your data.</p>]]>
+        </Value>
+    </LocaleResource>
+    <LocaleResource Name="AddNewImportConnection">
+        <Value><![CDATA[Add new <b>import</b>]]></Value>
+    </LocaleResource>
+    <LocaleResource Name="AddNewExportConnection">
+        <Value><![CDATA[Add new <b>export</b>]]></Value>
+    </LocaleResource>
+    <LocaleResource Name="EditConnection">
+        <Value>Edit connection</Value>
+    </LocaleResource>
+    <LocaleResource Name="UnauthorizedRequest">
+        <Value>Access has been denied</Value>
+    </LocaleResource>
+    <LocaleResource Name="ConnectionNotActive">
+        <Value>Requests are not possible through this connection because it is deactivated.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImportNotActive">
+        <Value>Data import through Shop-Connector is deactivated. Please activate it under "General" if you want to import data.</Value>
+    </LocaleResource>
+    <LocaleResource Name="NoContent">
+        <Value>There was no data or information returned.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ShopConnectorAuthResults">
+        <Value>Successfully authenticated;Authentication failed for unknown reason;Shop-Connector not available;Export through Shop-Connectoris deactivated;Request contains an invalid authorization header;The sent HMAC signature does not match the signature calculated by the server;The send timestamp is missing or has an invalid format;The sent timestamp deviates too much from the server time;The sent timestamp is older than the last request of the user;There is at least one message parameter missing which is required for security purpose;The sent content MD5 hash does not match the hash calculated by the server;A connection with the public key cannot be found;Connection is disabled;Public key is invalid;Incompatible version</Value>
+    </LocaleResource>
+    <LocaleResource Name="ProcessingResult">
+        <![CDATA[The operation was executed.<br />Categories {0} (success {1}, failed {2}).<br />Products {3} (success {4}, failed {5}).]]>
+    </LocaleResource>
+    <LocaleResource Name="LongRunning">
+        <Value>One moment please... this process can take up to several minutes depending on the amount of data.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImportInProgress">
+        <Value>The import is being performed in the background now. You can view the progress in the import dialog at any time.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ProcessingDescription">
+        <Value>Importing products;Importing bundles, grouped and required products;Import categories;Initialize import</Value>
+    </LocaleResource>
+    <LocaleResource Name="RunningResult">
+        <Value><![CDATA[<i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;{0}... {1}%.<br />{2} of {3} objects processed.<br />{4} success, {5} failed, {6} skipped.<br />{7} added, {8} updated.]]></Value>
+    </LocaleResource>
+    <LocaleResource Name="FinalResult">
+        <Value>{0}... {1} of {2} processed. {3} success, {4} failed, {5} skipped. {6} added, {7} updated.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImportCompleted">
+        <Value>The import has completed. Please see the log file for further information.</Value>
+    </LocaleResource>
+    <LocaleResource Name="NoImportFilesFound">
+        <Value>There are no import files. Please retrieve data first.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ShowImportedProducts">
+        <Value>Show imported products</Value>
+    </LocaleResource>
+    <LocaleResource Name="UploadXmlFile">
+        <Value>To upload an external XML product file drop it here or click.</Value>
+    </LocaleResource>
+    <LocaleResource Name="PluginOutOfDateMe">
+        <Value>Your plugin version is outdated. Please update the Shop-Connector plugin.</Value>
+    </LocaleResource>
+    <LocaleResource Name="PluginOutOfDateHe">
+        <Value>The partner uses an outdated plugin version and need to update it.</Value>
+    </LocaleResource>
+    <LocaleResource Name="FileTooLargeForPreview">
+        <Value><![CDATA[The import file of {0} MB is too large for a preview. Set the setting ShopConnectorSettings.MaxFileSizeForPreview to a higher value (in MB) if the preview should be displayed anyway (not recommended).]]></Value>
+    </LocaleResource>
+
+    <LocaleResource Name="IsImportEnabled">
+        <Value>Import activated</Value>
+    </LocaleResource>
+    <LocaleResource Name="IsImportEnabled.Hint">
+        <Value>Specifies whether it is principally (despite created connections) possible to import data from other stores.</Value>
+    </LocaleResource>
+    <LocaleResource Name="IsExportEnabled">
+        <Value>Export activated</Value>
+    </LocaleResource>
+    <LocaleResource Name="IsExportEnabled.Hint">
+        <Value>Specifies whether it is principally (despite created connections) possible that other stores can retrieve my data.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ValidMinutePeriod">
+        <Value>Request time window</Value>
+    </LocaleResource>
+    <LocaleResource Name="ValidMinutePeriod.Hint">
+        <Value>For security reasons should the time at which the request was sent to the Shop-Connector differ not too far from the current server time. With this setting, you set this time window in minutes.</Value>
+    </LocaleResource>
+    <LocaleResource Name="LogUnauthorized">
+        <Value>Log unauthorized accesses</Value>
+    </LocaleResource>
+    <LocaleResource Name="LogUnauthorized.Hint">
+        <Value>Specifies whether unauthorized requests will be saved in the log list.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImageDownloadTimeout">
+        <Value>Timeout for image download</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImageDownloadTimeout.Hint">
+        <Value>Specifies the timeout for the image download per product in minutes.</Value>
+    </LocaleResource>
+    <LocaleResource Name="EnableSkuMapping">
+        <Value>Differing product SKUs</Value>
+    </LocaleResource>
+    <LocaleResource Name="EnableSkuMapping.Hint">
+        <Value>Activate this option if you want to specify and export differing product SKUs.</Value>
+    </LocaleResource>
+    <LocaleResource Name="EnableSkuMapping.ProductInfo">
+        <Value>Specify different SKUs for this product to export them in a shop connector export instead of the default SKU.</Value>
+    </LocaleResource>
+    <LocaleResource Name="EnableSkuImport">
+        <Value>Import differing product SKUs</Value>
+    </LocaleResource>
+    <LocaleResource Name="EnableSkuImport.Hint">
+        <Value>
+            <![CDATA[Specifies whether the different SKUs should be imported via the columns ClientSku1, ClientSku2, ClientSku3 etc. during a CSV product import. Please specify the domain without www.]]>
+        </Value>
+    </LocaleResource>
+
+    <LocaleResource Name="Url">
+        <Value>Store URL</Value>
+    </LocaleResource>
+    <LocaleResource Name="Url.Hint">
+        <Value>Specifies the URL of the Smartstore store from which data will be imported.</Value>
+    </LocaleResource>
+    <LocaleResource Name="PublicKey">
+        <Value>Public key</Value>
+    </LocaleResource>
+    <LocaleResource Name="PublicKey.Hint">
+        <Value>The public access key is provided by the operator of the store, which serves as the data source.</Value>
+    </LocaleResource>
+    <LocaleResource Name="SecretKey">
+        <Value>Secret key</Value>
+    </LocaleResource>
+    <LocaleResource Name="SecretKey.Hint">
+        <Value>The secret access key is provided by the operator of the store, which serves as the data source. Please not disclose this key to third parties!</Value>
+    </LocaleResource>
+    <LocaleResource Name="RequestCount">
+        <Value>Requests</Value>
+    </LocaleResource>
+    <LocaleResource Name="RequestCount.Hint">
+        <Value>Number of requests that have been made through this connection.</Value>
+    </LocaleResource>
+    <LocaleResource Name="LastRequest">
+        <Value>Last request</Value>
+    </LocaleResource>
+    <LocaleResource Name="LastRequest.Hint">
+        <Value>Date of last request that have been made through this connection.</Value>
+    </LocaleResource>
+    <LocaleResource Name="LastProductCall">
+        <Value>Last product call</Value>
+    </LocaleResource>
+    <LocaleResource Name="LastProductCall.Hint">
+        <Value>Date when product data was fetched the last time through this connection.</Value>
+    </LocaleResource>
+    <LocaleResource Name="LimitedToManufacturerIds">
+        <Value>Manufacturer limited</Value>
+    </LocaleResource>
+    <LocaleResource Name="LimitedToManufacturerIds.Hint">
+        <Value>Specifies the manufacturers the connection is limited to.</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="Url.Validate">
+        <Value>Please enter a valid URL to Smartstore store.</Value>
+    </LocaleResource>
+    <!--<LocaleResource Name="Url.IsNotSelf">
+    <Value>The URL must not be the one of the own store.</Value>
+  </LocaleResource>-->
+
+    <LocaleResource Name="Action.About.Hint">
+        <Value>Retrieves informations about the data provider.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Action.ProductData">
+        <Value>Retrieve products</Value>
+    </LocaleResource>
+    <LocaleResource Name="Action.ProductData.Hint">
+        <Value>Retrieves the product data of the data provider and saves them on the server of your store.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Action.ProductImport">
+        <Value>Import products</Value>
+    </LocaleResource>
+    <LocaleResource Name="Action.ProductImport.Hint">
+        <Value>Imports products based on the data previously retrieved from the data provider.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Action.ImportLogFile">
+        <Value>Import protocol</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="ConnectorVersion">
+        <Value>Shop-Connector version</Value>
+    </LocaleResource>
+    <LocaleResource Name="ConnectorVersion.Hint">
+        <Value>The version of the Shop-Connector plugin.</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreCount">
+        <Value>Number of stores</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreCount.Hint">
+        <Value>Number of stores, which are administered under the Smartstore installation.</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreName">
+        <Value>Store name</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreName.Hint">
+        <Value>Store name of the data provider.</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreUrl">
+        <Value>Store URL</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreUrl.Hint">
+        <Value>Store URL of the data provider.</Value>
+    </LocaleResource>
+    <LocaleResource Name="CompanyName">
+        <Value>Company name</Value>
+    </LocaleResource>
+    <LocaleResource Name="CompanyName.Hint">
+        <Value>The company name of the data provider.</Value>
+    </LocaleResource>
+    <LocaleResource Name="UpdatedProductsCount">
+        <Value>New or updated products</Value>
+    </LocaleResource>
+    <LocaleResource Name="UpdatedProductsCount.Hint">
+        <Value>Number of products that were added or updated since your last fetch.</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreDateTimeUtc">
+        <Value>Time of the shop</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreDateTimeUtc.Hint">
+        <Value>The current system time of the store in coordinated universal time (GMT\UTC).</Value>
+    </LocaleResource>
+    <!--<LocaleResource Name="AvailableManufacturers">
+    <Value>Available manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="AvailableManufacturers.Hint">
+    <Value>The manufacturers whose product data you can access.</Value>
+  </LocaleResource>-->
+
+    <LocaleResource Name="FetchFromDate">
+        <Value>Fetch from</Value>
+    </LocaleResource>
+    <LocaleResource Name="FetchFromDate.Hint">
+        <Value>Specifies the date from which to retrieve product data, i.e. include only data that have been updated or created after. Blank means retrieve all data.</Value>
+    </LocaleResource>
+    <LocaleResource Name="DataFileName">
+        <Value>File name (optional)</Value>
+    </LocaleResource>
+    <LocaleResource Name="DataFileName.Hint">
+        <Value>Name of the file (optional) with the product data. The current date is always prepended due to sorting.</Value>
+    </LocaleResource>
+    <LocaleResource Name="FilterManufacturerIds">
+        <Value>Filter manufacturers</Value>
+    </LocaleResource>
+    <LocaleResource Name="FilterManufacturerIds.Hint">
+        <Value>Specifies the manufacturers for which product data should be retrieved. Blank means get product data of all manufacturers.</Value>
+    </LocaleResource>
+    <LocaleResource Name="FilterCategoryId">
+        <Value>Filter category</Value>
+    </LocaleResource>
+    <LocaleResource Name="FilterCategoryId.Hint">
+        <Value>Specifies the category for which product data should be retrieved. Blank means get product data of all categories.</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="ImportFile">
+        <Value>Data to be imported</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImportFile.Hint">
+        <Value>The file with the data to be imported.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImportCategories">
+        <Value>Import categories</Value>
+    </LocaleResource>
+    <LocaleResource Name="ImportCategories.Hint">
+        <Value>Specifies whether to import categories. If this option is disabled, all products are assigned to the shop connector category.</Value>
+    </LocaleResource>
+    <LocaleResource Name="TaxCategoryId">
+        <Value>Tax category</Value>
+    </LocaleResource>
+    <LocaleResource Name="TaxCategoryId.Hint">
+        <Value>Specifies the tax category used when creating new products.</Value>
+    </LocaleResource>
+    <LocaleResource Name="UpdateExistingProducts">
+        <Value>Update existing products</Value>
+    </LocaleResource>
+    <LocaleResource Name="UpdateExistingProducts.Hint">
+        <Value>Specifies whether to update existing products.</Value>
+    </LocaleResource>
+    <LocaleResource Name="UpdateExistingCategories">
+        <Value>Update existing categories</Value>
+    </LocaleResource>
+    <LocaleResource Name="UpdateExistingCategories.Hint">
+        <Value>Specifies whether to update existing categories.</Value>
+    </LocaleResource>
+    <LocaleResource Name="DeleteImportFile">
+        <Value>Delete import file</Value>
+    </LocaleResource>
+    <LocaleResource Name="DeleteImportFile.hint">
+        <Value>Specifies the import file to be deleted after a successful import.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Publish">
+        <Value>Publish</Value>
+    </LocaleResource>
+    <LocaleResource Name="Publish.Hint">
+        <Value>Specifies to publish new imported products.</Value>
+    </LocaleResource>
+    <LocaleResource Name="DisableBuyButton">
+        <Value>Hide buy button</Value>
+    </LocaleResource>
+    <LocaleResource Name="DisableBuyButton.Hint">
+        <Value>Specifies whether to hide or to display the buy button. The value will be imported if it was not specified here.</Value>
+    </LocaleResource>
+    <LocaleResource Name="DisableWishlistButton">
+        <Value>Hide wishlist button</Value>
+    </LocaleResource>
+    <LocaleResource Name="DisableWishlistButton.Hint">
+        <Value>Specifies whether to hide or to display the wishlist button. The value will be imported if it was not specified here.</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="ShopDomain">
+        <Value>Shop domain</Value>
+    </LocaleResource>
+    <LocaleResource Name="ShopDomain.Hint">
+        <Value>Specifies the shop domain (without www), e.g. smartstore.de. The SKU specified here is exported if the domain matches the shop URL of the connector connection.</Value>
+    </LocaleResource>
+</Language>

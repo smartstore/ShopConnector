@@ -1,0 +1,36 @@
+﻿@using SmartStore.ShopConnector.Models;
+@using SmartStore.ShopConnector;
+@using SmartStore.Web.Framework;
+@model ProductFileSelectModel
+@{
+	Layout = null;	
+	Html.AddCssFileParts(true, Url.Content("~/Plugins/SmartStore.ShopConnector/Content/smartstore.shopconnector.css"));
+}
+
+<div>
+	<form method="GET" class="connection-form" action="@Url.Action("ProductImport", "ShopConnectorImport", new { area = ShopConnectorPlugin.SystemName })">
+		<input type="hidden" id="id" name="id" value="@Model.Id" />
+
+		<table class="adminContent">
+			<tr>
+				<td class="adminTitle">
+					@Html.SmartLabelFor(model => model.ImportFile)
+				</td>
+				<td class="adminData">
+					@Html.DropDownListFor(model => model.ImportFile, Model.AvailableImportFiles)
+
+					<div class="mt-2">
+						<a href="#" data-url="@Url.Action("ProductDataDownload", "ShopConnectorImport", new { area = ShopConnectorPlugin.SystemName, id = Model.Id })" class="product-data-load btn btn-secondary" download>
+							<i class="far fa-fw fa-file-alt"></i>
+							<span>@T("Common.Download")</span>
+						</a>
+						<button type="button" data-url="@Url.Action("ProductDataDelete", "ShopConnectorImport", new { area = ShopConnectorPlugin.SystemName, id = Model.Id })" class="product-data-delete btn btn-danger" data-dismiss="modal">
+							<i class="far fa-trash-alt"></i>
+							<span>@T("Admin.Common.Delete")</span>
+						</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
