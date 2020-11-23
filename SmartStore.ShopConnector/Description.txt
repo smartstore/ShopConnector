@@ -1,6 +1,6 @@
-﻿FriendlyName: .NET to .NET Shop-Connector
+﻿FriendlyName: Shop-Connector
 SystemName: SmartStore.ShopConnector
-Description: Data exchange between Smartstore shops.
+Description: Direct data exchange between Smartstore shops.
 Group: Data
 Version: 4.1.0
 MinAppVersion: 4.1.0
