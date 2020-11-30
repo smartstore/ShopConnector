@@ -5,7 +5,7 @@ to exchange catalog data such as products and categories. Shops can act both as 
 The data exchange takes place in two steps. First the desired data is retrieved from the data provider and stored on the data receivers' server. In the second step the data can be imported by using several options.
 
 Further information can be found in the following blog post:  
-[https://smartstore.com/en/plug-in-smartstore-shopconnector-is-the-winning-formula-for-successful-data-networking](https://smartstore.com/en/plug-in-smartstore-shopconnector-is-the-winning-formula-for-successful-data-networking)
+[https://smartstore.com/en/plug-in-the-smartstore-shopconnector-is-the-winning-formula-for-successful-data-networking-3](https://smartstore.com/en/plug-in-the-smartstore-shopconnector-is-the-winning-formula-for-successful-data-networking-3)
 
 ## License
 
