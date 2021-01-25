@@ -2,8 +2,8 @@
 SystemName: SmartStore.ShopConnector
 Description: Direct data exchange between Smartstore shops.
 Group: Data
-Version: 4.1.0
-MinAppVersion: 4.1.0
+Version: 4.1.1
+MinAppVersion: 4.1.1
 Author: SmartStore AG
 DisplayOrder: 1
 FileName: SmartStore.ShopConnector.dll
