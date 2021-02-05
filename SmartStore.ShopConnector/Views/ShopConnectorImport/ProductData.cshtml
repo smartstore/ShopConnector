@@ -15,45 +15,53 @@
 		<input type="hidden" id="Id" name="Id" value="@Model.Id" />
 		<input type="hidden" id="IsForExport" name="IsForExport" value="false" />
 
-		<table class="adminContent">
-			<tr>
-				<td class="adminTitle">
-					@Html.SmartLabelFor(model => model.FetchFromDate)
-				</td>
-				<td class="adminData">
-					@Html.EditorFor(model => model.FetchFromDate)
-				</td>
-			</tr>
-			<tr>
-				<td class="adminTitle">
-					@Html.SmartLabelFor(model => model.DataFileName)
-				</td>
-				<td class="adminData">
-					@Html.EditorFor(model => model.DataFileName)
-				</td>
-			</tr>
-			@if (Model.AvailableManufacturers != null && Model.AvailableManufacturers.Any())
-			{
-				<tr>
-					<td class="adminTitle">
-						@Html.SmartLabelFor(model => model.FilterManufacturerIds)
-					</td>
-					<td class="adminData">
-						@Html.ListBoxFor(model => model.FilterManufacturerIds, Model.AvailableManufacturers, new { multiple = "multiple", data_tags = "true" })
-					</td>
-				</tr>
-			}
-			@if(Model.AvailableCategories != null && Model.AvailableCategories.Any())
-			{
-				<tr>
-					<td class="adminTitle">
-						@Html.SmartLabelFor(model => model.FilterCategoryId)
-					</td>
-					<td class="adminData">
-						@Html.DropDownListFor(model => model.FilterCategoryId, Model.AvailableCategories, T("Common.Unspecified"))
-					</td>
-				</tr>
-			}
-		</table>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.SmartLabelFor(model => model.FetchFromDate)
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.FetchFromDate)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.SmartLabelFor(model => model.DataFileName)
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.DataFileName)
+                </td>
+            </tr>
+            @if (Model.AvailableManufacturers != null && Model.AvailableManufacturers.Any())
+            {
+                <tr>
+                    <td class="adminTitle">
+                        @Html.SmartLabelFor(model => model.FilterManufacturerIds)
+                    </td>
+                    <td class="adminData">
+                        @Html.ListBoxFor(model => model.FilterManufacturerIds, Model.AvailableManufacturers, new { multiple = "multiple", data_tags = "true" })
+                    </td>
+                </tr>
+            }
+            @if (Model.AvailableCategories != null && Model.AvailableCategories.Any())
+            {
+                <tr>
+                    <td class="adminTitle">
+                        @Html.SmartLabelFor(model => model.FilterCategoryId)
+                    </td>
+                    <td class="adminData">
+                        @Html.DropDownListFor(model => model.FilterCategoryId, Model.AvailableCategories, T("Common.Unspecified"))
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td class="adminTitle">
+                    @Html.SmartLabelFor(model => model.FilterCatalogId)
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.FilterCatalogId)
+                </td>
+            </tr>
+        </table>
 	</form>
 </div>

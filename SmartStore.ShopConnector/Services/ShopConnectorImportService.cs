@@ -28,6 +28,7 @@ using SmartStore.Services.Media;
 using SmartStore.Services.Seo;
 using SmartStore.ShopConnector.Extensions;
 using SmartStore.Utilities;
+using SmartStore.Services.DataExchange.Import.Events;
 
 namespace SmartStore.ShopConnector.Services
 {
@@ -626,6 +627,10 @@ namespace SmartStore.ShopConnector.Services
             e.AttributeChoiceBehaviour = (AttributeChoiceBehaviour)p.GetValue<int>("AttributeChoiceBehaviour");
             e.IsEsd = p.GetValue<bool>("IsEsd");
             e.CustomsTariffNumber = p.GetString("CustomsTariffNumber");
+            e.ImportCatalogId = p.GetValue<string>("ImportCatalogId");
+            e.EClass = p.GetValue<string>("EClass");
+            e.Supplier = p.GetValue<string>("Supplier");
+            e.IsDangerousGood = p.GetValue<bool>("IsDangerousGood");
 
             if (cargo.IsNewEntity)
             {
@@ -1722,6 +1727,7 @@ namespace SmartStore.ShopConnector.Services
 
                 var xmlPath = cargo.Files.GetFullFilePath(state.ImportFile);
                 var fileStats = new ShopConnectorImportStats("Product").Get(state.ImportFile, true);
+                var additionalDataBatches = new Multimap<string, AdditionalXmlData>();
 
                 using (var cts = new CancellationTokenSource())
                 using (var scope = new DbContextScope(ctx: _rsProduct.Context, hooksEnabled: false, autoDetectChanges: true, proxyCreation: false, validateOnSave: false))
@@ -1812,6 +1818,33 @@ namespace SmartStore.ShopConnector.Services
                                             ProcessProductPictures(cargo, product, entity);
                                             ProcessProductAttributeCombinations(cargo, product, entity);
 
+                                            // Collect additional data and process it in batch, not row.
+                                            foreach (XPathNavigator additionalDataNode in product.Select("AdditionalData/*"))
+                                            {
+                                                if (additionalDataNode != null)
+                                                {
+                                                    var pluginName = additionalDataNode.Name;
+
+                                                    if (additionalDataBatches.ContainsKey(pluginName))
+                                                    {
+                                                        additionalDataBatches[pluginName].Add(new AdditionalXmlData(id, entity.Id, additionalDataNode));
+                                                    }
+                                                    else
+                                                    {
+                                                        additionalDataBatches.Add(pluginName, new AdditionalXmlData(id, entity.Id, additionalDataNode));
+                                                    }
+
+                                                    if (additionalDataBatches[pluginName].Count >= 200)
+                                                    {
+                                                        // Send additional data to consumer.
+                                                        var data = additionalDataBatches[pluginName].ToDictionarySafe(x => x.ExportedEntityId, x => x);
+                                                        _services.EventPublisher.Publish(new XmlImportedEvent(data, pluginName));
+                                                        additionalDataBatches[pluginName].Clear(); // Batch was processed > clear.
+                                                        // The remaining data items will be processed when products loop is finished.
+                                                    }
+                                                }
+                                            }
+
                                             if (cargo.IsNewEntity)
                                             {
                                                 ++cargo.Stats.Added;
@@ -1842,6 +1875,14 @@ namespace SmartStore.ShopConnector.Services
                             return !stop;
                         }); // Product fragments.
                     }   // XmlReader.
+
+
+                    // Send remaining items to consumers.
+                    foreach (var batch in additionalDataBatches)
+                    {
+                        var data = additionalDataBatches[batch.Key].ToDictionarySafe(x => x.ExportedEntityId, x => x);
+                        _services.EventPublisher.Publish(new XmlImportedEvent(data, batch.Key));
+                    }
 
                     cargo.ClearFragmentData();
                     var deleteImportFile = state.DeleteImportFile && cargo.Stats.Failure == 0;

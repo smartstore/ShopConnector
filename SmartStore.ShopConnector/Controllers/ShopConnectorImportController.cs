@@ -183,6 +183,7 @@ namespace SmartStore.ShopConnector.Controllers
                 context.RequestContent.Add("FilterManufacturerIds", string.Join(",", model.FilterManufacturerIds ?? new int[0]));
                 context.RequestContent.Add("FilterCategoryId", model.FilterCategoryId.EmptyNull());
                 context.RequestContent.Add("DataFileName", model.DataFileName.EmptyNull());
+                context.RequestContent.Add("FilterCatalogId", model.FilterCatalogId.EmptyNull());
 
                 if (!_connectorService.SendRequest(context, model.Id))
                 {

@@ -22,5 +22,8 @@ namespace SmartStore.ShopConnector.Models
         [SmartResourceDisplayName("Plugins.SmartStore.ShopConnector.FilterCategoryId")]
         public string FilterCategoryId { get; set; }
         public List<SelectListItem> AvailableCategories { get; set; }
+
+        [SmartResourceDisplayName("Plugins.SmartStore.ShopConnector.FilterCatalogId")]
+        public string FilterCatalogId { get; set; }
     }
 }

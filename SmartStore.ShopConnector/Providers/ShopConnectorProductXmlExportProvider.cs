@@ -11,6 +11,8 @@ using SmartStore.Core.Domain.Stores;
 using SmartStore.Core.Plugins;
 using SmartStore.Services.DataExchange.Export;
 using SmartStore.ShopConnector.Services;
+using SmartStore.Services.DataExchange.Export.Events;
+using SmartStore.Services;
 
 namespace SmartStore.ShopConnector.ExportProvider
 {
@@ -23,15 +25,18 @@ namespace SmartStore.ShopConnector.ExportProvider
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly Lazy<IShopConnectorService> _shopConnectorService;
+        private readonly Lazy<ICommonServices> _services;
 
         public ShopConnectorProductXmlExportProvider(
             IRepository<Category> categoryRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            Lazy<IShopConnectorService> shopConnectorService)
+            Lazy<IShopConnectorService> shopConnectorService,
+            Lazy<ICommonServices> services)
         {
             _categoryRepository = categoryRepository;
             _storeMappingRepository = storeMappingRepository;
             _shopConnectorService = shopConnectorService;
+            _services = services;
         }
 
         private bool IsCategoryAllowed(int categoryId, HashSet<int> limitedStoreIds, Dictionary<int, int> allCategoryIds, Multimap<int, int> storeMappings)
@@ -131,6 +136,9 @@ namespace SmartStore.ShopConnector.ExportProvider
                     if (domain.HasValue())
                     {
                         var productIds = segment.Select(x => (int)((dynamic)x).Id).ToArray();
+                        var xmlExportingEvent = new XmlExportingEvent(productIds);
+                        _services.Value.EventPublisher.Publish(xmlExportingEvent);
+
                         var mappings = _shopConnectorService.Value.GetSkuMappingsByProductIds(domain, productIds);
                         skuMappings = mappings.ToDictionarySafe(x => x.ProductId, x => x.Sku);
                     }
