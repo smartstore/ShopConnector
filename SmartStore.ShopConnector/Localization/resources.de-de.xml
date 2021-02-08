@@ -281,6 +281,12 @@
     <LocaleResource Name="FilterCategoryId.Hint">
         <Value>Legt die Warengruppe fest, deren Produktdaten abgerufen werden sollen. Leer bedeutet, Daten aller Warengruppen abrufen.</Value>
     </LocaleResource>
+    <LocaleResource Name="FilterCatalogId">
+      <Value>Katalog-ID filtern</Value>
+    </LocaleResource>
+    <LocaleResource Name="FilterCatalogId.Hint">
+      <Value>Legt eine optionale Katalog-ID fest. Nur Produkte mit dieser Katalog-ID werden abgerufen.</Value>
+    </LocaleResource>
 
     <LocaleResource Name="ImportFile">
         <Value>Zu importierende Daten</Value>

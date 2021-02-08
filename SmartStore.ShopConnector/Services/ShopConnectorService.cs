@@ -105,7 +105,8 @@ namespace SmartStore.ShopConnector.Services
             int[] providerStores,
             int[] consumerManus,
             int categoryId = 0,
-            DateTime? updatedOnUtc = null)
+            DateTime? updatedOnUtc = null,
+            string catalogId = null)
         {
             Guard.NotNull(providerManus, nameof(providerManus));
             Guard.NotNull(providerStores, nameof(providerStores));
@@ -144,6 +145,11 @@ namespace SmartStore.ShopConnector.Services
             }
 
             var query = _catalogSearchService.Value.PrepareQuery(searchQuery);
+
+            if (catalogId.HasValue())
+            {
+                query = query.Where(x => x.ImportCatalogId == catalogId);
+            }
 
             if (updatedOnUtc.HasValue)
             {
@@ -677,7 +683,8 @@ namespace SmartStore.ShopConnector.Services
                     limitedToStoreIds,
                     context.Model.FilterManufacturerIds,
                     context.Model.FilterCategoryId.ToInt(),
-                    fetchFrom);
+                    fetchFrom,
+                    context.Model.FilterCatalogId);
             }
 
             var result = _dataExporter.Value.Export(request, token);
