@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using SmartStore.Core.IO;
 using SmartStore.Services;
 using SmartStore.Utilities;
 
@@ -30,27 +29,26 @@ namespace SmartStore.ShopConnector.Extensions
 
             if (image.Url.HasValue())
             {
+                var localPath = string.Empty;
+
+                try
+                {
+                    // Exclude query string parts!
+                    localPath = new Uri(image.Url).LocalPath;
+                }
+                catch { }
+
                 image.Url = services.WebHelper.ModifyQueryString(image.Url, "q=100", null);
 
-                var extension = MimeTypes.MapMimeTypeToExtension(image.MimeType);
-                if (extension.HasValue())
+                if (image.Id == 0)
                 {
-                    if (image.Id == 0)
-                    {
-                        image.Id = CommonHelper.GenerateRandomInteger();
-                    }
-
-                    var seoFileName = nav.GetString("SeoFilename");
-                    if (seoFileName.IsEmpty())
-                    {
-                        seoFileName = CommonHelper.GenerateRandomInteger().ToString();
-                    }
-
-                    image.FileName = "{0}-{1}".FormatInvariant(image.Id, seoFileName).ToValidFileName();
-                    image.Path = Path.Combine(imageDirectory, image.FileName + extension.EnsureStartsWith("."));
-
-                    return image;
+                    image.Id = CommonHelper.GenerateRandomInteger();
                 }
+
+                image.FileName = image.Id.ToString() + "-" + (Path.GetFileName(localPath).ToValidFileName().NullEmpty() ?? Path.GetRandomFileName());
+                image.Path = Path.Combine(imageDirectory, image.FileName);
+
+                return image;
             }
 
             return null;
